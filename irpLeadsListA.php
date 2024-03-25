@@ -64,6 +64,7 @@ alert($alert); ?>
                         <th>Telefon</th>
                         <th>E-mail</th>
                         <th style="width: 60px;">Level</th>
+                        <th>Produkt</th>
                         <th style="width: 50px;">zaznacz</th>
                     </tr>
                 </thead>
@@ -92,6 +93,7 @@ alert($alert); ?>
                         <th>Telefon</th>
                         <th>E-mail</th>
                         <th style="width: 60px;">Level</th>
+                        <th>Produkt</th>
                         <th style="width: 50px;">zaznacz</th>
                     </tr>
                 </thead>
@@ -146,12 +148,17 @@ window.onload = function()
     // ZAZNACZ WIELE LEADOW I WYŚWIETL FORMULARZ
     $(document).on('click','.btn-add-task-to-many',function(e)
     {
-        
+        e.preventDefault();
+        var ile = $(this).data('ile');
+        var grupa_leadow = $(this).parents('.grupa-leadow');
+        var checkboxes = $('input[type=checkbox]', grupa_leadow);
 
-        
+        checkboxes.slice(0, ile).prop('checked', true);
+        checkboxes.slice(ile).prop('checked', false);
 
-
-
+        if (ile){
+            $('.btn-add-task-to-checked', grupa_leadow).click();
+        }
     });
     
 
@@ -272,6 +279,7 @@ function  pokaz_leady(){
                         d4,
                         v.email,
                         level,
+                        v.nazwa_produktu
                         '<input data-klient-id="'+v.klient_id+'" type="checkbox">'
                     ] 
                     ).node();

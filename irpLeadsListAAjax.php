@@ -84,7 +84,7 @@ UNION SELECT klient_id FROM __wykluczenia1
 UNION SELECT klient_id FROM __wykluczenia2;
 
 
-SELECT k.id, k.imie, k.nazwisko, k.email, k.telefon, k.level
+SELECT k.id, k.imie, k.nazwisko, k.email, k.telefon, k.level, p.nazwa
 FROM `klienci` k 
 JOIN uczestnicyProgramu u ON u.klient_id = k.id
 JOIN (
@@ -94,12 +94,13 @@ JOIN (
     GROUP BY uczestnik_id 
     HAVING max=118
 ) AS t2 ON t2.uczestnik_id = u.uczestnik_id
+JOIN produkty p on t2.max = p.id
 WHERE
     k.level = 'uczestnik' 
     AND k.status = 'aktywny'
     AND NOT EXISTS(SELECT 1 FROM __wykluczenia w WHERE w.klient_id = k.id);
     
-SELECT k.id, k.imie, k.nazwisko, k.email, k.telefon, k.level
+SELECT k.id, k.imie, k.nazwisko, k.email, k.telefon, k.level, p.nazwa
 FROM `klienci` k 
 JOIN uczestnicyProgramu u ON u.klient_id = k.id
 JOIN (
@@ -109,6 +110,7 @@ JOIN (
     GROUP BY uczestnik_id 
     HAVING max>118
 ) AS t2 ON t2.uczestnik_id = u.uczestnik_id
+JOIN produkty p on t2.max = p.id
 WHERE
     k.level = 'uczestnik' 
     AND k.status = 'aktywny'
@@ -131,7 +133,8 @@ WHERE
                     'klient'    => $w['imie'] . ' ' . $w['nazwisko'],
                     'telefon'   => $w['telefon'],
                     'email'     => $w['email'],
-                    'level'     => $w['level']
+                    'level'     => $w['level'],
+                    'nazwa_produktu' => $w['nazwa']
                 );
             }
             $result->free();
